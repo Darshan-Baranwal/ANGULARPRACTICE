@@ -1,0 +1,112 @@
+<h1>Dynamic form</h1>
+<form [formGroup]="dynamicFormGroup" (ngSubmit)="onFormSubmission()">
+  <!-- Define the control names -->
+  <div *ngFor="let control of formContent; let i = index">
+    <div *ngIf="control.type === 'text'" appHighlighting="red" color="blue">
+      <label [for]="control.name">{{ control.name }}</label>
+      <input
+        type="text"
+        [name]="control.name"
+        [id]="control.name"
+        [formControlName]="control.name"
+      />
+    </div>
+    <div *ngIf="control.type === 'textarea'">
+      <label [for]="control.name">{{ control.name }}</label>
+      <input
+        type="textarea"
+        [name]="control.name"
+        [id]="control.name"
+        [formControlName]="control.name"
+      />
+    </div>
+    <div *ngIf="control.type === 'number'">
+      <label [for]="control.name">{{ control.name }}</label>
+      <input
+        type="number"
+        [name]="control.name"
+        [id]="control.name"
+        [formControlName]="control.name"
+      />
+    </div>
+    <div *ngIf="control.type === 'radio'">
+      <label [for]="control.name">{{ control.name }}</label>
+      <div *ngFor="let option of control.options; let ind = index">
+        <input
+          type="radio"
+          [name]="control.name"
+          [id]="control.name"
+          [formControlName]="control.name"
+          [value]="option.value"
+        />
+        <label [for]="control.name">{{ option.label }}</label>
+      </div>
+    </div>
+    <div *ngIf="control.type === 'select'">
+      <label [for]="control.name">{{ control.name }}</label>
+      <select
+        type="select"
+        [name]="control.name"
+        [id]="control.name"
+        [formControlName]="control.name"
+        [value]="control.options[0].value"
+      >
+        <option *ngFor="let option of control.options" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+    <div *ngIf="control.type === 'checkbox'">
+      <label [for]="control.name">{{ control.name }}</label>
+      <input
+        type="checkbox"
+        [name]="control.name"
+        [id]="control.name"
+        [formControlName]="control.name"
+      />
+    </div>
+
+    <div *ngIf="control.type === 'formGroup'" [formGroupName]="control.name">
+      ----------------------------------------
+      <label [for]="control.name">{{ control.name }}</label>
+      <div *ngFor="let nestedControl of control.value">
+        <div *ngIf="nestedControl.type === 'text'">
+          <label [for]="nestedControl.name">{{ nestedControl.name }}</label>
+          <input
+            type="text"
+            [name]="nestedControl.name"
+            [id]="nestedControl.name"
+            [formControlName]="nestedControl.name"
+          />
+        </div>
+        <div *ngIf="nestedControl.type === 'number'">
+          <label [for]="nestedControl.name">{{ nestedControl.name }}</label>
+          <input
+            type="number"
+            [name]="nestedControl.name"
+            [id]="nestedControl.name"
+            [formControlName]="nestedControl.name"
+          />
+        </div>
+      </div>
+    </div>
+    <ng-container [formArrayName]="skills">
+      <div *ngIf="control.type === 'formArray'">
+        ----------------------------------------
+        <div *ngFor="let arrayControl of skills.controls; let i = index">
+          Skill {{ i + 1 }} :
+          <div [formGroupName]="i">
+            Primary Skill
+            <input type="text" [formControlName]="primarySkill" />
+            Secondary Skill
+            <input type="text" [formControlName]="secondarySkill" />
+          </div>
+        </div>
+        <hr />
+        <button type="button" (click)="addMoreSkills()">Add More Skill</button>
+      </div>
+    </ng-container>
+  </div>
+
+  <button type="submit" [disabled]="!dynamicFormGroup?.valid">Submit</button>
+</form>
